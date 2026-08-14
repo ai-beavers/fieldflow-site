@@ -3,7 +3,7 @@ import { getSeoEngineClient } from "@/lib/seo-engine";
 import { absoluteArticleUrl, absoluteUrl, blogPath } from "@/lib/paths";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow-demo.sageobot.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com";
 const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

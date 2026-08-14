@@ -3,7 +3,7 @@ import type { IArticleListItem } from "@/types/blog";
 import { absoluteArticleUrl, absoluteUrl, blogPath } from "@/lib/paths";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow-demo.sageobot.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com";
 const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 const SITE_NAME = process.env.SEOENGINE_SITE || "fieldflow";
 const WEB_SUB_HUB = "https://pubsubhubbub.appspot.com/";

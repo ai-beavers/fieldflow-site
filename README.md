@@ -2,7 +2,7 @@
 
 Demo Next.js site for FieldFlow, a fictional B2B field-service scheduling product.
 
-Public hostname: `https://fieldflow-demo.sageobot.com`
+Public hostname: `https://fieldflow.demo.sageobot.com`
 
 ## Run locally
 
