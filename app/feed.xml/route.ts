@@ -5,9 +5,10 @@ import { absoluteArticleUrl, absoluteUrl, blogPath } from "@/lib/paths";
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com";
 const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
-const SITE_NAME = process.env.SEOENGINE_SITE || "fieldflow";
+const SITE_NAME = "FieldFlow";
 const WEB_SUB_HUB = "https://pubsubhubbub.appspot.com/";
 const MAX_ITEMS = 20;
+const CACHE_CONTROL = "s-maxage=300, stale-while-revalidate=86400";
 
 function escapeXml(value: string): string {
   return value
@@ -26,6 +27,13 @@ export async function GET(): Promise<Response> {
     articles = response.articles || [];
   } catch (error) {
     console.error("Failed to build feed from seo-engine:", error);
+  }
+
+  if (articles.length === 0) {
+    return new Response(null, {
+      status: 204,
+      headers: { "Cache-Control": CACHE_CONTROL },
+    });
   }
 
   const updatedAt = articles[0]?.updatedAt || articles[0]?.publishedAt || new Date().toISOString();
@@ -64,7 +72,7 @@ ${entries}
   return new Response(xml, {
     headers: {
       "Content-Type": "application/atom+xml; charset=utf-8",
-      "Cache-Control": "s-maxage=300, stale-while-revalidate=86400",
+      "Cache-Control": CACHE_CONTROL,
     },
   });
 }
