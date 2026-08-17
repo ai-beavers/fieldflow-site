@@ -8,8 +8,8 @@ const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: BASE_URL_CLEAN, lastModified: new Date(), priority: 1.0 },
-    { url: `${BASE_URL_CLEAN}${blogPath()}`, lastModified: new Date(), priority: 0.9 },
+    { url: BASE_URL_CLEAN, priority: 1.0 },
+    { url: `${BASE_URL_CLEAN}${blogPath()}`, priority: 0.9 },
   ];
 
   let blogRoutes: MetadataRoute.Sitemap = [];
@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: entry.url
         ? absoluteUrl(BASE_URL_CLEAN, entry.url)
         : absoluteArticleUrl(BASE_URL_CLEAN, entry.slug),
-      lastModified: entry.updatedAt ? new Date(entry.updatedAt) : new Date(),
+      ...(entry.updatedAt ? { lastModified: new Date(entry.updatedAt) } : {}),
       priority: 0.7,
     }));
   } catch (err) {
