@@ -12,11 +12,21 @@ import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
 import { getSeoEngineClient } from "@/lib/seo-engine";
-import { articlePath, blogPath, categoryPath, tagPath } from "@/lib/paths";
+import {
+  absoluteUrl,
+  articlePath,
+  blogPath,
+  categoryPath,
+  tagPath,
+} from "@/lib/paths";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com";
+const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -103,19 +113,35 @@ export default async function BlogPostPage({ params }: Props) {
   const toc = extractH2Headings(article.markdown || "");
   const authorName = article.author || "Editorial team";
   const hasModifiedDate = Boolean(article.updatedAt && article.updatedAt !== article.publishedAt);
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Blog",
+      item: absoluteUrl(BASE_URL_CLEAN, blogPath()),
+    },
+  ];
+
+  if (article.category?.slug && article.category.title) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: breadcrumbItems.length + 1,
+      name: article.category.title,
+      item: absoluteUrl(BASE_URL_CLEAN, categoryPath(article.category.slug)),
+    });
+  }
+
+  breadcrumbItems.push({
+    "@type": "ListItem",
+    position: breadcrumbItems.length + 1,
+    name: article.headline,
+    item: absoluteUrl(BASE_URL_CLEAN, articlePath(article.slug)),
+  });
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Blog", item: blogPath() },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: article.category?.title || "Article",
-        item: categoryPath(article.category?.slug || ""),
-      },
-      { "@type": "ListItem", position: 3, name: article.headline, item: articlePath(article.slug) },
-    ],
+    itemListElement: breadcrumbItems,
   };
 
   return (
@@ -149,11 +175,11 @@ export default async function BlogPostPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: article.jsonldVideoobject }}
         />
       )}
-      <Script
+      <script
         id="jsonld-breadcrumbs"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbJsonLd).replace(/<\//g, "<\\/"),
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
         }}
       />
 
