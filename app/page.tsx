@@ -69,7 +69,8 @@ export default function Home() {
 
         <section className="border-t border-gray-200 pt-8 text-sm text-gray-500">
           <p>
-            Built in Berlin, used by 200+ trade businesses.{" "}
+            Built for field-service teams with 5 to 50 technicians, without
+            enterprise complexity.{" "}
             <Link href="/blog" className="text-blue-600 hover:underline">
               Read our blog
             </Link>
