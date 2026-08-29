@@ -9,12 +9,17 @@ const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE_URL_CLEAN, priority: 1.0 },
-    { url: `${BASE_URL_CLEAN}${blogPath()}`, priority: 0.9 },
   ];
 
   let blogRoutes: MetadataRoute.Sitemap = [];
   try {
     const entries = await getSeoEngineClient().getSitemapEntries();
+    if (entries.length > 0) {
+      staticRoutes.push({
+        url: `${BASE_URL_CLEAN}${blogPath()}`,
+        priority: 0.9,
+      });
+    }
     blogRoutes = entries.map((entry) => ({
       url: entry.url
         ? absoluteUrl(BASE_URL_CLEAN, entry.url)

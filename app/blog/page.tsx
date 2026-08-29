@@ -7,13 +7,41 @@ import Link from "next/link";
 import { getSeoEngineClient } from "@/lib/seo-engine";
 import { articlePath, blogPath } from "@/lib/paths";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: "Blog",
   description: "Articles and insights from our team.",
   alternates: { canonical: blogPath() },
 };
 
 const LIMIT = 12;
+
+interface BlogPageProps {
+  searchParams: Promise<{ page?: string; tag?: string }>;
+}
+
+function pageNumber(value?: string) {
+  return Math.max(0, parseInt(value || "0", 10));
+}
+
+export async function generateMetadata({
+  searchParams,
+}: BlogPageProps): Promise<Metadata> {
+  const { page: pageParam, tag } = await searchParams;
+  const page = pageNumber(pageParam);
+  const tagSlug = tag?.trim() || "";
+
+  try {
+    const { total } = tagSlug
+      ? await getSeoEngineClient().getTagArticles(tagSlug, page, LIMIT)
+      : await getSeoEngineClient().getArticles(page, LIMIT);
+    return {
+      ...BASE_METADATA,
+      ...(total === 0 ? { robots: { index: false, follow: true } } : {}),
+    };
+  } catch {
+    return BASE_METADATA;
+  }
+}
 
 function formatDate(iso: string) {
   if (!iso) return "";
@@ -24,13 +52,9 @@ function formatDate(iso: string) {
   });
 }
 
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; tag?: string }>;
-}) {
+export default async function BlogPage({ searchParams }: BlogPageProps) {
   const { page: pageParam, tag } = await searchParams;
-  const page = Math.max(0, parseInt(pageParam || "0", 10));
+  const page = pageNumber(pageParam);
   const tagSlug = tag?.trim() || "";
 
   const client = getSeoEngineClient();

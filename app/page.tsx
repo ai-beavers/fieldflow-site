@@ -67,6 +67,18 @@ export default function Home() {
           ))}
         </section>
 
+        <section className="mb-16 border-t border-gray-200 pt-8">
+          <h2 className="text-base font-semibold mb-2">
+            Built around field-service work
+          </h2>
+          <p className="text-sm text-gray-600 max-w-2xl">
+            Owners and operations teams at HVAC, plumbing, electrical,
+            cleaning, and landscaping businesses can plan jobs, coordinate
+            technicians, and automate routine customer updates in one simple
+            workflow.
+          </p>
+        </section>
+
         <section className="border-t border-gray-200 pt-8 text-sm text-gray-500">
           <p>
             Built in Berlin, used by 200+ trade businesses.{" "}
