@@ -2,13 +2,44 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getSeoEngineClient } from "@/lib/seo-engine";
 
-export const metadata: Metadata = {
-  title: "Tools",
-  description: "Interactive SEO and AI tools.",
-  alternates: { canonical: "/tools" },
-};
-
 const LIMIT = 12;
+const TOOLS_TITLE = "Field service tools | FieldFlow";
+const TOOLS_DESCRIPTION =
+  "Tools for field-service teams to plan jobs, coordinate technicians, and improve day-to-day scheduling.";
+
+interface ToolsPageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+function pageNumber(value?: string) {
+  return Math.max(0, parseInt(value || "0", 10));
+}
+
+function toolsPath(page: number) {
+  return page > 0 ? `/tools?page=${page}` : "/tools";
+}
+
+export async function generateMetadata({
+  searchParams,
+}: ToolsPageProps): Promise<Metadata> {
+  const { page: pageParam } = await searchParams;
+  const page = pageNumber(pageParam);
+  const baseMetadata: Metadata = {
+    title: TOOLS_TITLE,
+    description: TOOLS_DESCRIPTION,
+    alternates: { canonical: toolsPath(page) },
+  };
+
+  try {
+    const { total } = await getSeoEngineClient().getTools(page, LIMIT);
+    return {
+      ...baseMetadata,
+      ...(total === 0 ? { robots: { index: false, follow: true } } : {}),
+    };
+  } catch {
+    return baseMetadata;
+  }
+}
 
 function formatDate(iso: string) {
   if (!iso) return "";
@@ -19,13 +50,9 @@ function formatDate(iso: string) {
   });
 }
 
-export default async function ToolsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
+export default async function ToolsPage({ searchParams }: ToolsPageProps) {
   const { page: pageParam } = await searchParams;
-  const page = Math.max(0, parseInt(pageParam || "0", 10));
+  const page = pageNumber(pageParam);
 
   const client = getSeoEngineClient();
   const { tools, total } = await client.getTools(page, LIMIT);
@@ -89,4 +116,3 @@ export default async function ToolsPage({
     </main>
   );
 }
-

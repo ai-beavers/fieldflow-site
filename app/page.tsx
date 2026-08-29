@@ -1,8 +1,31 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com"
 ).replace(/\/$/, "");
+const SITE_TITLE =
+  "FieldFlow: scheduling and dispatch software for field-service teams";
+const SITE_DESCRIPTION =
+  "FieldFlow helps field-service teams plan jobs, dispatch technicians, and keep customers informed. Stop planning your week on a whiteboard.";
+
+export const metadata: Metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "FieldFlow",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
 
 const SITE_SCHEMA = {
   "@context": "https://schema.org",

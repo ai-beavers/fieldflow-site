@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fieldflow.demo.sageobot.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "FieldFlow: scheduling and dispatch software for field-service teams",
   description:
     "FieldFlow helps field-service teams plan jobs, dispatch technicians, and keep customers informed. Stop planning your week on a whiteboard.",
