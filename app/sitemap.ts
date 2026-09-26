@@ -9,6 +9,7 @@ const BASE_URL_CLEAN = BASE_URL.replace(/\/$/, "");
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE_URL_CLEAN, priority: 1.0 },
+    { url: `${BASE_URL_CLEAN}/technician-app`, priority: 0.8 },
     { url: `${BASE_URL_CLEAN}${blogPath()}`, priority: 0.9 },
   ];
 
