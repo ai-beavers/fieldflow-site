@@ -28,14 +28,17 @@ const FEATURES = [
   {
     title: "Job scheduling",
     text: "Plan every job on a drag-and-drop weekly board. See who is where, and what is still unassigned.",
+    href: null,
   },
   {
     title: "Technician app",
     text: "Your crew gets the day's route, job details, and checklists on their phone. No more morning phone calls.",
+    href: "/technician-app",
   },
   {
     title: "Automated customer notifications",
     text: "Customers get a confirmation, an arrival window, and an on-my-way text without anyone typing a message.",
+    href: null,
   },
 ];
 
@@ -61,7 +64,18 @@ export default function Home() {
         <section className="mb-16 grid gap-8 sm:grid-cols-3">
           {FEATURES.map((feature) => (
             <div key={feature.title}>
-              <h2 className="text-base font-semibold mb-2">{feature.title}</h2>
+              <h2 className="text-base font-semibold mb-2">
+                {feature.href ? (
+                  <Link
+                    href={feature.href}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {feature.title}
+                  </Link>
+                ) : (
+                  feature.title
+                )}
+              </h2>
               <p className="text-sm text-gray-600">{feature.text}</p>
             </div>
           ))}
