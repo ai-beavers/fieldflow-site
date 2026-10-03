@@ -36,6 +36,7 @@ const FEATURES = [
   {
     title: "Automated customer notifications",
     text: "Customers get a confirmation, an arrival window, and an on-my-way text without anyone typing a message.",
+    href: "/customer-notifications",
   },
 ];
 
@@ -61,7 +62,15 @@ export default function Home() {
         <section className="mb-16 grid gap-8 sm:grid-cols-3">
           {FEATURES.map((feature) => (
             <div key={feature.title}>
-              <h2 className="text-base font-semibold mb-2">{feature.title}</h2>
+              <h2 className="text-base font-semibold mb-2">
+                {feature.href ? (
+                  <Link href={feature.href} className="text-blue-600 hover:underline">
+                    {feature.title}
+                  </Link>
+                ) : (
+                  feature.title
+                )}
+              </h2>
               <p className="text-sm text-gray-600">{feature.text}</p>
             </div>
           ))}
